@@ -662,7 +662,7 @@ export const getSubscriptionStatus = async (req, res) => {
     res.status(500).json({ message: err.message || "Internal Server Error" });
   }
 };
-
+//new laptop
 export const getPaymentHistoryByStudent = async (req, res) => {
   try {
     const { studentId } = req.params;
@@ -698,7 +698,7 @@ export const getPaymentHistoryByStudent = async (req, res) => {
 
 
 
-
+//new laptop
 export const getStudentPaymentHistory = async (req, res) => {
   try {
     const studentId = req.user.id;

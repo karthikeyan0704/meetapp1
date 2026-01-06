@@ -1,5 +1,6 @@
 import Lesson from "../Model/lesson.js";
 import User from "../Model/userSchema.js";
+//new laptop
 
 // @desc    List of lessons in a module
 // @route   GET /api/modules/:moduleId/lessons
@@ -38,7 +39,7 @@ export const getModuleLessons = async (req, res) => {
   }
 };
 
-
+//new laptop
 // @desc    Fetch lesson details (content URL, type)
 // @route   GET /api/lessons/:lessonId
 export const getLessonDetails = async (req, res) => {

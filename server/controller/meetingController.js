@@ -491,6 +491,7 @@ export const deleteMeeting = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+//new laptop
 export const getCourseLiveClasses = async (req, res) => {
   try {
     const { courseId } = req.params;
@@ -531,7 +532,7 @@ export const getCourseLiveClasses = async (req, res) => {
   }
 };
 
-
+//new laptop
 export const getAllMeetings = async (req, res) => {
   try {
     if (!["admin", "owner"].includes(req.user.role)) {
@@ -544,6 +545,98 @@ export const getAllMeetings = async (req, res) => {
       .populate("students.studentId", "FirstName email");
 
     res.json(meetings);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+
+
+//new laptop
+// ---------------------------
+// Get Student's Allocated Meetings
+// ---------------------------
+export const getMyMeetings = async (req, res) => {
+  try {
+    const studentId = req.user.id;
+
+    
+    const meetings = await Meeting.find({
+      "students.studentId": studentId,
+      deleteAt: { $gte: new Date() },
+    })
+      .select("-students") 
+      .sort({ date: 1, startTime: 1 });
+
+    res.json({ count: meetings.length, meetings });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+//new laptop
+export const joinMeeting = async (req, res) => {
+  try {
+   
+    const meetingId = req.params.meetingId || req.params.id;
+    
+    const userId = req.user.id;
+    const userRole = req.user.role;
+
+    
+    const meeting = await Meeting.findById(meetingId);
+    if (!meeting) return res.status(404).json({ error: "Meeting not found" });
+
+    
+    if (userRole !== "admin" && userRole !== "owner") {
+      
+      
+      const isAllocated = meeting.students.some(
+        (s) => s.studentId.toString() === userId
+      );
+
+     
+      let isSubscribed = false;
+      if (meeting.courseId) {
+        const student = await User.findById(userId);
+        const now = new Date();
+        isSubscribed = student.subscribedCourses.some(
+          (sub) =>
+            sub.courseId.toString() === meeting.courseId.toString() &&
+            sub.expiresAt > now
+        );
+      }
+
+      if (!isAllocated && !isSubscribed) {
+        return res.status(403).json({ error: "You are not authorized to join this meeting." });
+      }
+    }
+
+   
+    const meetingDate = new Date(meeting.date);
+    const currentDate = new Date();
+
+    
+    const isSameDay = meetingDate.toDateString() === currentDate.toDateString();
+
+    if (!isSameDay) {
+      
+       if (userRole !== "admin" && userRole !== "owner") {
+         return res.status(400).json({ error: "Meeting is not scheduled for today." });
+       }
+    }
+
+   
+    res.json({
+      message: "Access granted",
+      meetingUrl: meeting.meetingUrl,
+      className: meeting.className
+    });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
