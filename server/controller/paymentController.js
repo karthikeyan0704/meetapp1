@@ -18,7 +18,7 @@ async function sendEnrollmentEmail({ student, course, subjectSuffix, messageLine
       <p><b>Access Expires:</b> ${expiryDateString}</p>
     `;
     await transporter.sendMail({
-      from: `"SathyaGomani Academy" <${process.env.EMAIL_USER}>`,
+      from: `"MA Academy" <${process.env.EMAIL_USER}>`,
       to: student.email,
       subject: `${course.title} - ${subjectSuffix}`,
       html: htmlLines,

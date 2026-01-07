@@ -104,12 +104,12 @@ export const allocateStudents = async (req, res) => {
     const meeting = await Meeting.findById(req.params.id);
     if (!meeting) return res.status(404).json({ message: "Meeting not found" });
 
-    if (meeting.courseId) {
-      return res.status(400).json({
-        message:
-          "Cannot manually allocate students to a course-wide 'Live Class'. Students get access by purchasing the course.",
-      });
-    }
+    // if (meeting.courseId) {
+    //   return res.status(400).json({
+    //     message:
+    //       "Cannot manually allocate students to a course-wide 'Live Class'. Students get access by purchasing the course.",
+    //   });
+    // }
 
     meeting.students = meeting.students || [];
     const students = await User.find({
