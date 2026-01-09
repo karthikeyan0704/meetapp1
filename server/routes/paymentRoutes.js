@@ -19,7 +19,7 @@ router.post("/payment/initiate", auth, studentOnly, initiatePayment);
 router.post("/payment/verify", auth, studentOnly, verifyPayment);
 router.get("/subscription/status", auth, studentOnly, getSubscriptionStatus);
 router.post("/payment/create-subscription", auth, studentOnly, createSubscription);
-router.post("/payment/webhook", razorpayWebhook);
+router.post('/api/payment/webhook', express.raw({ type: 'application/json' }), razorpayWebhook);
 router.get("/payments/history", auth, studentOnly, getStudentPaymentHistory);
 
 // --- ADMIN PAYMENTS ---
